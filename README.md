@@ -9,26 +9,26 @@ You're encouraged to take this project in a direction of your choice while meeti
 
 ### 1. Customer Ordering Flow
    #### Menu View
-      ##### Pizza Selection
+      #### Pizza Selection
          - Customers can choose from "Specialty Pizzas" or create a custom pizza.
          - For specialty pizzas, allow customers to select the size, add extra toppings, or exclude default toppings.
          - Custom pizzas should support full topping selection with size-based pricing.
-      ##### Quantity Selection
+      #### Quantity Selection
          - Allow customers to select quantities for each item.
    #### Checkout Cart
-      ##### Cart Display
+      #### Cart Display
          - Display all selected items, each with its total price.
          - Allow order edits, such as updating quantities or removing items.
-      ##### Checkout Action
+      #### Checkout Action
          - Provide an option to proceed to checkout with the selected items.
    #### Checkout
-      ##### Customer Information
+      #### Customer Information
          - Collect necessary customer details for delivery or pickup.
-      ##### Order Summary
+      #### Order Summary
          - Display an itemized summary of the order, including prices and the total amount.
-      ##### Payment
+      #### Payment
          - Support payment methods of "credit card" and "cash."
-      ##### Order Submission
+      #### Order Submission
          - Confirm and submit the order.
 
 ### 2. Employee Orders Dashboard
