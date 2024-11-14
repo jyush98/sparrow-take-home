@@ -39,7 +39,7 @@ type Pizza = {
   size: HiringFrontendTakeHomePizzaSize;
   // For specialty pizzas, we only add extra toppings in the toppings array
   // For custom pizzas, we charge for all toppings
-  toppings: PizzaTopping[];
+  toppings?: PizzaTopping[];
   // For specialty pizzas, we can exclude toppings that are already included in the pizza
   toppingExclusions?: HiringFrontendTakeHomePizzaToppings[];
   quantity: number;
@@ -48,7 +48,7 @@ type Pizza = {
 
 type OrderItem = {
   id: string;
-  item: Pizza;
+  pizza: Pizza;
 };
 
 export enum HiringFrontendTakeHomeOrderStatus {
