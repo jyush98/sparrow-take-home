@@ -1,0 +1,29 @@
+.header {
+    display: flex;
+    justify-content: space-between; /* Pushes items to the edges */
+    align-items: center; /* Aligns items vertically */
+    padding: 1rem;
+    background-color: #ffffff;
+    color: #f13312;
+    border-bottom: 1px solid #ddd;
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.cart-button {
+    background-color: #f13312;
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cart-button:hover {
+    background-color: #c12b10;
+}

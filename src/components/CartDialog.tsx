@@ -1,0 +1,68 @@
+import React from 'react';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../store/store';
+import { removeItemFromCart, updateQuantity } from '../store/cartSlice';
+import TextField from '@mui/material/TextField';
+
+interface CartDialogProps {
+    open: boolean;
+    onClose: () => void;
+}
+
+const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
+    const cartItems = useSelector((state: RootState) => state.cart.items);
+    const dispatch = useDispatch();
+
+    const handleQuantityChange = (id: string, quantity: number) => {
+        if (quantity > 0) {
+            dispatch(updateQuantity({ id, quantity }));
+        }
+    };
+
+    const handleRemoveItem = (id: string) => {
+        dispatch(removeItemFromCart(id));
+    };
+
+    return (
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+            <DialogTitle>Your Cart</DialogTitle>
+            <DialogContent>
+                {cartItems.length === 0 ? (
+                    <p>Your cart is empty.</p>
+                ) : (
+                    cartItems.map((item) => (
+                        <div key={item.id} style={{ marginBottom: '1rem' }}>
+                            <h4>{item.name}</h4>
+                            <p>Size: {item.size}</p>
+                            <p>Toppings: {Object.entries(item.toppings).map(([topping, level]) => `${topping} (${level})`).join(', ')}</p>
+                            <p>Price per Unit: ${item.pricePerUnit.toFixed(2)}</p>
+                            <p>Total Price: ${(item.quantity * item.pricePerUnit).toFixed(2)}</p>
+                            <TextField
+                                label="Quantity"
+                                type="number"
+                                value={item.quantity}
+                                onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value, 10))}
+                                slotProps={{ input: { inputProps: { min: 1 } } }}
+                            />
+                            <Button onClick={() => handleRemoveItem(item.id)} color="secondary">
+                                Remove
+                            </Button>
+                        </div>
+                    ))
+                )}
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onClose} color="primary">
+                    Close
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+};
+
+export default CartDialog;
