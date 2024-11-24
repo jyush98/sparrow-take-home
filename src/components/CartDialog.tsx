@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
 import { removeItemFromCart, updateQuantity } from '../store/cartSlice';
 import TextField from '@mui/material/TextField';
+import { useNavigate } from 'react-router-dom';
 
 interface CartDialogProps {
     open: boolean;
@@ -17,6 +18,7 @@ interface CartDialogProps {
 const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
     const cartItems = useSelector((state: RootState) => state.cart.items);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleQuantityChange = (id: string, quantity: number) => {
         if (quantity > 0) {
@@ -26,6 +28,11 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
 
     const handleRemoveItem = (id: string) => {
         dispatch(removeItemFromCart(id));
+    };
+
+    const handleProceedToCheckout = () => {
+        onClose();
+        navigate('/order/checkout');
     };
 
     return (
@@ -40,13 +47,13 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
                             <h4>{item.name}</h4>
                             <p>Size: {item.size}</p>
                             <p>
-                                Default Toppings: 
+                                Default Toppings:
                                 {Object.entries(item.defaultToppings)
                                     .map(([topping, level]) => `${topping} (${level})`)
                                     .join(', ') || 'None'}
                             </p>
                             <p>
-                                Extra Toppings: 
+                                Extra Toppings:
                                 {Object.entries(item.extraToppings)
                                     .filter(([_, level]) => level && level.toLowerCase() !== 'none')
                                     .map(([topping, level]) => `${topping} (${level})`)
@@ -72,6 +79,11 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
                 <Button onClick={onClose} color="primary">
                     Close
                 </Button>
+                {cartItems.length > 0 && (
+                    <Button onClick={handleProceedToCheckout} variant="contained" color="primary">
+                        Proceed to Checkout
+                    </Button>
+                )}
             </DialogActions>
         </Dialog>
     );

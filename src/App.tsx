@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import CustomerOrdering from './components/CustomerOrdering';
+import CheckoutPage from './components/CheckoutPage';
 //import EmployeeDashboard from './components/EmployeeDashboard';
 //import OrderStatusCheck from './components/OrderStatusCheck';
 
@@ -11,6 +12,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/order" element={<CustomerOrdering />} />
+        <Route path="/order/checkout" element={<CheckoutPage />} />
         {/* <Route path="/dashboard" element={<EmployeeDashboard />} />
         <Route path="/order-status" element={<OrderStatusCheck />} /> */}
       </Routes>
