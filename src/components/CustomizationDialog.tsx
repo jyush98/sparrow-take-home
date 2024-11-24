@@ -94,20 +94,24 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
     return totalPrice.toFixed(2);
 };
 
-    const handleAddToCart = () => {
-        const cartItem = {
-            id: `${pizza.id}-${Date.now()}`, // Generating a unique ID using timestamp
-            name: pizza.name,
-            size: selectedSize,
-            toppings: selectedToppings,
-            quantity,
-            pricePerUnit: parseFloat(calculateTotalPrice()) / quantity,
-        };
-
-        console.log("Adding item to cart:", cartItem); 
-        dispatch(addItemToCart(cartItem)); 
-        onClose(); 
+const handleAddToCart = () => {
+    const cartItem = {
+        id: `${pizza.id}-${Date.now()}`, // Generating a unique ID using timestamp
+        name: pizza.name,
+        size: selectedSize,
+        defaultToppings: Object.fromEntries(
+            Object.entries(selectedToppings).filter(([topping, _]) => pizza.toppings.includes(topping))
+        ),
+        extraToppings: Object.fromEntries(
+            Object.entries(selectedToppings).filter(([topping, _]) => !pizza.toppings.includes(topping))
+        ),
+        quantity,
+        pricePerUnit: parseFloat(calculateTotalPrice()) / quantity,
     };
+
+    dispatch(addItemToCart(cartItem));
+    onClose();
+};
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">

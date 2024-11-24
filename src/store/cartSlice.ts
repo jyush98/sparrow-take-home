@@ -4,7 +4,8 @@ interface CartItem {
   id: string;
   name: string;
   size: string;
-  toppings: { [key: string]: string };
+  defaultToppings: { [key: string]: string }; // Default toppings
+  extraToppings: { [key: string]: string };   // Extra toppings
   quantity: number;
   pricePerUnit: number;
 }
@@ -22,7 +23,12 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addItemToCart: (state, action: PayloadAction<CartItem>) => {
-      state.items.push(action.payload);
+      const newItem = {
+        ...action.payload,
+        defaultToppings: action.payload.defaultToppings || {}, // Initialize as empty object if not provided
+        extraToppings: action.payload.extraToppings || {},     // Initialize as empty object if not provided
+      };
+      state.items.push(newItem);
     },
     removeItemFromCart: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);

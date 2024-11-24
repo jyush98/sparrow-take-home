@@ -39,7 +39,19 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
                         <div key={item.id} style={{ marginBottom: '1rem' }}>
                             <h4>{item.name}</h4>
                             <p>Size: {item.size}</p>
-                            <p>Toppings: {Object.entries(item.toppings).map(([topping, level]) => `${topping} (${level})`).join(', ')}</p>
+                            <p>
+                                Default Toppings: 
+                                {Object.entries(item.defaultToppings)
+                                    .map(([topping, level]) => `${topping} (${level})`)
+                                    .join(', ') || 'None'}
+                            </p>
+                            <p>
+                                Extra Toppings: 
+                                {Object.entries(item.extraToppings)
+                                    .filter(([_, level]) => level && level.toLowerCase() !== 'none')
+                                    .map(([topping, level]) => `${topping} (${level})`)
+                                    .join(', ') || 'None'}
+                            </p>
                             <p>Price per Unit: ${item.pricePerUnit.toFixed(2)}</p>
                             <p>Total Price: ${(item.quantity * item.pricePerUnit).toFixed(2)}</p>
                             <TextField
