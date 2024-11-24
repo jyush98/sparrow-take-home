@@ -8,6 +8,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
 import { useNavigate } from 'react-router-dom';
 
 const CheckoutPage: React.FC = () => {
@@ -17,16 +20,15 @@ const CheckoutPage: React.FC = () => {
     const [cardNumber, setCardNumber] = useState<string>('');
     const [cvv, setCvv] = useState<string>('');
     const navigate = useNavigate();
+    const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card'>('card');
 
     const handlePlaceOrder = () => {
-        if (!name || !address || !cardNumber || !cvv) {
+        if (!name || (paymentMethod === 'card' && (!address || !cardNumber || !cvv))) {
             alert('Please fill in all fields');
             return;
         }
-        
-        // This is where you would handle placing the order, e.g., sending the information to a backend server.
         alert('Order placed successfully!');
-        navigate('/'); // Navigate back to home or confirmation page after order placement.
+        navigate('/');
     };
 
     const calculateTotal = () => {
@@ -57,6 +59,14 @@ const CheckoutPage: React.FC = () => {
                     <h3>Total: ${calculateTotal()}</h3>
 
                     <h3>Billing Information:</h3>
+                    <RadioGroup
+                        value={paymentMethod}
+                        onChange={(e) => setPaymentMethod(e.target.value as 'cash' | 'card')}
+                        style={{ marginBottom: '1rem' }}
+                    >
+                        <FormControlLabel value="cash" control={<Radio />} label="Pay with Cash" />
+                        <FormControlLabel value="card" control={<Radio />} label="Pay with Card" />
+                    </RadioGroup>
                     <TextField
                         label="Name"
                         fullWidth
@@ -64,27 +74,31 @@ const CheckoutPage: React.FC = () => {
                         onChange={(e) => setName(e.target.value)}
                         style={{ marginBottom: '1rem' }}
                     />
-                    <TextField
-                        label="Address"
-                        fullWidth
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        style={{ marginBottom: '1rem' }}
-                    />
-                    <TextField
-                        label="Card Number"
-                        fullWidth
-                        value={cardNumber}
-                        onChange={(e) => setCardNumber(e.target.value)}
-                        style={{ marginBottom: '1rem' }}
-                    />
-                    <TextField
-                        label="CVV"
-                        fullWidth
-                        value={cvv}
-                        onChange={(e) => setCvv(e.target.value)}
-                        style={{ marginBottom: '1rem' }}
-                    />
+                    {paymentMethod === 'card' && (
+                        <>
+                            <TextField
+                                label="Address"
+                                fullWidth
+                                value={address}
+                                onChange={(e) => setAddress(e.target.value)}
+                                style={{ marginBottom: '1rem' }}
+                            />
+                            <TextField
+                                label="Card Number"
+                                fullWidth
+                                value={cardNumber}
+                                onChange={(e) => setCardNumber(e.target.value)}
+                                style={{ marginBottom: '1rem' }}
+                            />
+                            <TextField
+                                label="CVV"
+                                fullWidth
+                                value={cvv}
+                                onChange={(e) => setCvv(e.target.value)}
+                                style={{ marginBottom: '1rem' }}
+                            />
+                        </>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => navigate('/cart')} color="secondary">
