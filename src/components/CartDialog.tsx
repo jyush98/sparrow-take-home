@@ -35,6 +35,10 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
         navigate('/order/checkout');
     };
 
+    const calculateTotal = () => {
+        return cartItems.reduce((total, item) => total + item.pricePerUnit * item.quantity, 0).toFixed(2);
+    };
+
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
             <DialogTitle>Your Cart</DialogTitle>
@@ -79,10 +83,16 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
                 <Button onClick={onClose} color="primary">
                     Close
                 </Button>
-                {cartItems.length > 0 && (
+                {cartItems.length > 0 && ( 
+                <>
                     <Button onClick={handleProceedToCheckout} variant="contained" color="primary">
                         Proceed to Checkout
                     </Button>
+                    <h3>
+                        ${calculateTotal()}
+                    </h3>
+                </>
+                    
                 )}
             </DialogActions>
         </Dialog>
