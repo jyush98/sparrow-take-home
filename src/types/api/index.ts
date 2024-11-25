@@ -67,8 +67,7 @@ export const getPizzaPricing: GetPizzaPricingRequest = async () => {
 type CreatePizzaOrderRequest = (
   order: HiringFrontendTakeHomeOrderRequest
 ) => Promise<{
-  id: any;
-  order: HiringFrontendTakeHomeOrderResponse;
+  order: HiringFrontendTakeHomeOrderRequest;
 }>;
 
 export const createPizzaOrder: CreatePizzaOrderRequest = async (order) => {
