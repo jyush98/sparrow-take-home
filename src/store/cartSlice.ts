@@ -6,6 +6,7 @@ interface CartItem {
   size: string;
   defaultToppings: { [key: string]: string }; // Default toppings
   extraToppings: { [key: string]: string };   // Extra toppings
+  removedToppings: string[];                  // Removed toppings
   quantity: number;
   pricePerUnit: number;
 }
@@ -27,6 +28,7 @@ const cartSlice = createSlice({
         ...action.payload,
         defaultToppings: action.payload.defaultToppings || {}, // Initialize as empty object if not provided
         extraToppings: action.payload.extraToppings || {},     // Initialize as empty object if not provided
+        removedToppings: action.payload.removedToppings || [], // Initialize as empty array if not provided
       };
       state.items.push(newItem);
     },
@@ -39,9 +41,12 @@ const cartSlice = createSlice({
         item.quantity = action.payload.quantity;
       }
     },
+    clearCart: (state) => {
+      state.items = [];
+    },
   },
 });
 
-export const { addItemToCart, removeItemFromCart, updateQuantity } = cartSlice.actions;
+export const { addItemToCart, removeItemFromCart, updateQuantity, clearCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -47,7 +47,7 @@ type Pizza = {
   totalPrice: number;
 };
 
-type OrderItem = {
+export type OrderItem = {
   id: string;
   pizza: Pizza;
 };

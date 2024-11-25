@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
+import { clearCart } from '../store/cartSlice';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -12,24 +13,119 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { useNavigate } from 'react-router-dom';
+import {
+    HiringFrontendTakeHomeOrderRequest,
+    OrderItem,
+    HiringFrontendTakeHomePaymentMethod,
+    HiringFrontendTakeHomeOrderType,
+    HiringFrontendTakeHomePizzaSize,
+    PizzaTopping,
+    HiringFrontendTakeHomeToppingQuantity,
+    HiringFrontendTakeHomePizzaType,
+    HiringFrontendTakeHomePizzaToppings,
+} from '../types/index';
+import { createPizzaOrder } from '../types/api/index';
+
+
+interface DeliveryAddress {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+}
 
 const CheckoutPage: React.FC = () => {
     const cartItems = useSelector((state: RootState) => state.cart.items);
-    const [name, setName] = useState<string>('');
-    const [address, setAddress] = useState<string>('');
+    const [firstName, setFirstName] = useState<string>('');
+    const [lastName, setLastName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [address, setAddress] = useState<DeliveryAddress>({
+        street: '',
+        city: '',
+        state: '',
+        zipCode: '',
+    });
     const [cardNumber, setCardNumber] = useState<string>('');
     const [cvv, setCvv] = useState<string>('');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card'>('card');
+    const [obtainMethod, setObtainMethod] = useState<'pickup' | 'delivery'>('pickup');
 
-    const handlePlaceOrder = () => {
-        if (!name || (paymentMethod === 'card' && (!address || !cardNumber || !cvv))) {
+
+    const handlePlaceOrder = async () => {
+        // Validate user input before proceeding
+        if (
+            !firstName ||
+            !lastName ||
+            !email ||
+            (obtainMethod === 'delivery' &&
+                (!address.street || !address.city || !address.state || !address.zipCode)) ||
+            (paymentMethod === 'card' && (!cardNumber || !cvv))
+        ) {
             alert('Please fill in all fields');
             return;
         }
-        alert('Order placed successfully!');
-        navigate('/');
+
+        // Prepare order items for the request
+        const items: OrderItem[] = cartItems.map((item) => ({
+            id: item.id,
+            pizza: {
+                type: HiringFrontendTakeHomePizzaType.Custom,
+                size: item.size as HiringFrontendTakeHomePizzaSize,
+                quantity: item.quantity,
+                totalPrice: item.pricePerUnit * item.quantity,
+                toppings: [
+                    ...Object.entries(item.defaultToppings).map(
+                        ([toppingName, toppingQuantity]) =>
+                            ({
+                                name: toppingName as HiringFrontendTakeHomePizzaToppings,
+                                quantity: toppingQuantity as HiringFrontendTakeHomeToppingQuantity,
+                            }) as PizzaTopping
+                    ),
+                    ...Object.entries(item.extraToppings).map(
+                        ([toppingName, toppingQuantity]) =>
+                            ({
+                                name: toppingName as HiringFrontendTakeHomePizzaToppings,
+                                quantity: toppingQuantity as HiringFrontendTakeHomeToppingQuantity,
+                            }) as PizzaTopping
+                    ),
+                ],
+            },
+        }));
+
+        // Create the order object according to HiringFrontendTakeHomeOrderRequest type
+        const order: HiringFrontendTakeHomeOrderRequest = {
+            locationId: "j-yushuvayev",
+            items,
+            customer: {
+                firstName,
+                lastName,
+                email,
+                ...(obtainMethod === 'delivery' && {
+                    deliveryAddress: address,
+                }),
+            },
+            totalAmount: parseFloat(calculateTotal()),
+            paymentMethod:
+                paymentMethod === 'card'
+                    ? HiringFrontendTakeHomePaymentMethod.CreditCard
+                    : HiringFrontendTakeHomePaymentMethod.Cash,
+            creditCardNumber: paymentMethod === 'card' ? cardNumber : undefined,
+            type: obtainMethod === 'pickup' ? HiringFrontendTakeHomeOrderType.Pickup : HiringFrontendTakeHomeOrderType.Delivery,
+        };
+
+        try {
+            // Call the createPizzaOrder function with the constructed order
+            const result = await createPizzaOrder(order);
+            alert(`Order placed successfully! Order ID: ${result.order.id}`);
+            dispatch(clearCart());
+            navigate('/');
+        } catch (error) {
+            alert("Failed to place order. Please try again.");
+        }
     };
+
 
     const calculateTotal = () => {
         return cartItems.reduce((total, item) => total + item.pricePerUnit * item.quantity, 0).toFixed(2);
@@ -58,6 +154,70 @@ const CheckoutPage: React.FC = () => {
                     ))}
                     <h3>Total: ${calculateTotal()}</h3>
 
+                    <TextField
+                        label="First Name"
+                        fullWidth
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        style={{ marginBottom: '1rem' }}
+                    />
+                    <TextField
+                        label="Last Name"
+                        fullWidth
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        style={{ marginBottom: '1rem' }}
+                    />
+                    <TextField
+                        label="Email"
+                        fullWidth
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        style={{ marginBottom: '1rem' }}
+                    />
+                    <h3>Pick up or Delivery:</h3>
+                    <RadioGroup
+                        value={obtainMethod}
+                        onChange={(e) => setObtainMethod(e.target.value as 'pickup' | 'delivery')}
+                        style={{ marginBottom: '1rem' }}
+                    >
+                        <FormControlLabel value="pickup" control={<Radio />} label="Pickup" />
+                        <FormControlLabel value="delivery" control={<Radio />} label="Delivery" />
+                    </RadioGroup>
+                    {obtainMethod === 'delivery' && (
+                        <>
+                            <TextField
+                                label="Street"
+                                fullWidth
+                                value={address.street}
+                                onChange={(e) => setAddress({ ...address, street: e.target.value })}
+                                style={{ marginBottom: '1rem' }}
+                            />
+                            <TextField
+                                label="City"
+                                fullWidth
+                                value={address.city}
+                                onChange={(e) => setAddress({ ...address, city: e.target.value })}
+                                style={{ marginBottom: '1rem' }}
+                            />
+                            <TextField
+                                label="State"
+                                fullWidth
+                                value={address.state}
+                                onChange={(e) => setAddress({ ...address, state: e.target.value })}
+                                style={{ marginBottom: '1rem' }}
+                            />
+                            <TextField
+                                label="ZIP Code"
+                                fullWidth
+                                value={address.zipCode}
+                                onChange={(e) => setAddress({ ...address, zipCode: e.target.value })}
+                                style={{ marginBottom: '1rem' }}
+                            />
+                        </>
+                    )}
+
+
                     <h3>Billing Information:</h3>
                     <RadioGroup
                         value={paymentMethod}
@@ -67,22 +227,8 @@ const CheckoutPage: React.FC = () => {
                         <FormControlLabel value="cash" control={<Radio />} label="Pay with Cash" />
                         <FormControlLabel value="card" control={<Radio />} label="Pay with Card" />
                     </RadioGroup>
-                    <TextField
-                        label="Name"
-                        fullWidth
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        style={{ marginBottom: '1rem' }}
-                    />
                     {paymentMethod === 'card' && (
                         <>
-                            <TextField
-                                label="Address"
-                                fullWidth
-                                value={address}
-                                onChange={(e) => setAddress(e.target.value)}
-                                style={{ marginBottom: '1rem' }}
-                            />
                             <TextField
                                 label="Card Number"
                                 fullWidth
@@ -101,8 +247,8 @@ const CheckoutPage: React.FC = () => {
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => navigate('/cart')} color="secondary">
-                        Back to Cart
+                    <Button onClick={() => navigate('/order')} color="secondary">
+                        Back to Menu
                     </Button>
                     <Button onClick={handlePlaceOrder} variant="contained" color="primary">
                         Place Order

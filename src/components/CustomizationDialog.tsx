@@ -12,6 +12,7 @@ import headerImage from '../assets/pizza.png';
 import TextField from '@mui/material/TextField';
 import { useDispatch } from 'react-redux';
 import { addItemToCart } from '../store/cartSlice';
+import Checkbox from '@mui/material/Checkbox';
 
 interface ToppingPrices {
     [key: string]: {
@@ -38,6 +39,7 @@ interface CustomizationDialogProps {
 const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose, pizza, pricingData }) => {
     const [selectedSize, setSelectedSize] = useState<'small' | 'medium' | 'large'>('medium');
     const [selectedToppings, setSelectedToppings] = useState<{ [key: string]: string }>({});
+    const [excludedToppings, setExcludedToppings] = useState<string[]>([]);
     const [quantity, setQuantity] = useState<number>(1);
     const dispatch = useDispatch();
 
@@ -58,6 +60,14 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
         return null;
     }
 
+    const handleClose = () => {
+        setSelectedSize('medium');
+        setSelectedToppings({});
+        setExcludedToppings([]);
+        setQuantity(1);
+        onClose();
+    };
+
     const handleSizeChange = (size: 'small' | 'medium' | 'large') => {
         setSelectedSize(size);
     };
@@ -68,6 +78,12 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
             ...prev,
             [toppingName]: value,
         }));
+    };
+
+    const handleToppingExcludeChange = (toppingName: string, isExcluded: boolean) => {
+        setExcludedToppings((prev) =>
+            isExcluded ? [...prev, toppingName] : prev.filter(topping => topping !== toppingName)
+        );
     };
 
     const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,25 +112,27 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
 
 const handleAddToCart = () => {
     const cartItem = {
-        id: `${pizza.id}-${Date.now()}`, // Generating a unique ID using timestamp
+        id: `${pizza.id}`, 
         name: pizza.name,
         size: selectedSize,
+        //type: ,
         defaultToppings: Object.fromEntries(
             Object.entries(selectedToppings).filter(([topping, _]) => pizza.toppings.includes(topping))
         ),
         extraToppings: Object.fromEntries(
             Object.entries(selectedToppings).filter(([topping, _]) => !pizza.toppings.includes(topping))
         ),
+        removedToppings: [...excludedToppings],
         quantity,
         pricePerUnit: parseFloat(calculateTotalPrice()) / quantity,
     };
 
     dispatch(addItemToCart(cartItem));
-    onClose();
+    handleClose();
 };
 
     return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
             <DialogTitle>Customize Your Pizza</DialogTitle>
             <DialogContent>
                 <img src={headerImage} alt={pizza.name} style={{ width: '100%', height: '200px', borderRadius: '8px', marginBottom: '1rem', objectFit: 'cover' }} />
@@ -139,32 +157,18 @@ const handleAddToCart = () => {
                         label={`Large ($${pizza.price.large})`}
                     />
                 </RadioGroup>
-                <h4>Default Toppings:</h4>
+                <h4>Exclude Default Toppings:</h4>
                 {pizza.toppings.map((topping) => (
                     <div key={topping}>
-                        <h5>{topping}</h5>
-                        <RadioGroup value={selectedToppings[topping] || 'none'} onChange={(e) => handleToppingChange(topping, e.target.value)}>
-                            <FormControlLabel
-                                value="none"
-                                control={<Radio />}
-                                label={'None'}
-                            />
-                            <FormControlLabel
-                                value="light"
-                                control={<Radio />}
-                                label={'Light'}
-                            />
-                            <FormControlLabel
-                                value="regular"
-                                control={<Radio />}
-                                label={'Regular'}
-                            />
-                            <FormControlLabel
-                                value="extra"
-                                control={<Radio />}
-                                label={'Extra'}
-                            />
-                        </RadioGroup>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={excludedToppings.includes(topping)}
+                                    onChange={(e) => handleToppingExcludeChange(topping, e.target.checked)}
+                                />
+                            }
+                            label={`Exclude ${topping}`}
+                        />
                     </div>
                 ))}
                 <h4>Extra Toppings:</h4>
@@ -202,7 +206,7 @@ const handleAddToCart = () => {
                     onChange={handleQuantityChange}
                     slotProps={{ input: { inputProps: { min: 1 } } }}
                 />
-                <Button onClick={onClose} color="secondary">
+                <Button onClick={handleClose} color="secondary">
                     Cancel
                 </Button>
                 <Button onClick={handleAddToCart} variant="contained" color="primary">
