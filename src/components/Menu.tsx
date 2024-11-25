@@ -20,7 +20,11 @@ const Menu: React.FC = memo(() => {
             try {
                 const response = await fetch('https://api.sparrowtest.com/v2/lmd/hiring/frontend/take-home/specialty-pizzas');
                 const data = await response.json();
-                setPizzas(data.specialtyPizzas);
+                const updatedPizzas = data.specialtyPizzas.map((pizza: Pizza) => ({
+                    ...pizza,
+                    type: 'specialty',
+                }));
+                setPizzas(updatedPizzas);
             } catch (error) {
                 console.error('Error fetching specialty pizzas:', error);
             }
@@ -47,7 +51,8 @@ const Menu: React.FC = memo(() => {
                 const customPizza: Pizza = {
                     id: 'custom',
                     name: 'Custom Pizza',
-                    group: "classics",
+                    group: 'classics',
+                    type: 'custom',
                     description: 'Create your own pizza with all your favorite toppings!',
                     price: {
                         small: pricing.size.small,

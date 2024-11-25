@@ -2,6 +2,7 @@ export interface Pizza {
     id: string;
     name: string;
     group: string;
+    type: string;
     description: string;
     toppings: string[];
     price: {

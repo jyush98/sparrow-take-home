@@ -112,10 +112,10 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
 
 const handleAddToCart = () => {
     const cartItem = {
-        id: `${pizza.id}`, 
+        id: `${pizza.id}-${Date.now()}`, // Generating a unique ID using timestamp 
         name: pizza.name,
         size: selectedSize,
-        //type: ,
+        type: pizza.type,
         defaultToppings: Object.fromEntries(
             Object.entries(selectedToppings).filter(([topping, _]) => pizza.toppings.includes(topping))
         ),

@@ -67,12 +67,14 @@ const CheckoutPage: React.FC = () => {
             return;
         }
 
+    
         // Prepare order items for the request
         const items: OrderItem[] = cartItems.map((item) => ({
             id: item.id,
             pizza: {
-                type: HiringFrontendTakeHomePizzaType.Custom,
+                type: item.type as HiringFrontendTakeHomePizzaType,
                 size: item.size as HiringFrontendTakeHomePizzaSize,
+                name: item.name,
                 quantity: item.quantity,
                 totalPrice: item.pricePerUnit * item.quantity,
                 toppings: [

@@ -4,6 +4,7 @@ interface CartItem {
   id: string;
   name: string;
   size: string;
+  type: string;
   defaultToppings: { [key: string]: string }; // Default toppings
   extraToppings: { [key: string]: string };   // Extra toppings
   removedToppings: string[];                  // Removed toppings
