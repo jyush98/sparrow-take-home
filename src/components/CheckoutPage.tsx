@@ -119,7 +119,7 @@ const CheckoutPage: React.FC = () => {
 
         try {
             // Call the createPizzaOrder function with the constructed order
-            // const result = await createPizzaOrder(order);
+            await createPizzaOrder(order);
             //alert(`Order placed successfully! Order ID: ${result.order.id}`);
             dispatch(clearCart());
             navigate('/');
