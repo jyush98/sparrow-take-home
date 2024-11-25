@@ -1,6 +1,7 @@
 export interface Pizza {
     id: string;
     name: string;
+    group: string;
     description: string;
     toppings: string[];
     price: {
@@ -24,3 +25,12 @@ export interface PricingData {
         };
     };
 }
+
+// export type SpecialtyPizza = {
+//     id: string;
+//     name: string;
+//     group: HiringFrontendTakeHomeSpecialtyPizzaGroup;
+//     toppings: PizzaTopping[];
+//     description: string;
+//     price: Record<HiringFrontendTakeHomePizzaSize, number>;
+//   };

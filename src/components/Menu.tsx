@@ -47,6 +47,7 @@ const Menu: React.FC = memo(() => {
                 const customPizza: Pizza = {
                     id: 'custom',
                     name: 'Custom Pizza',
+                    group: "classics",
                     description: 'Create your own pizza with all your favorite toppings!',
                     price: {
                         small: pricing.size.small,

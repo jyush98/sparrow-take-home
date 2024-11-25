@@ -23,13 +23,14 @@ export enum HiringFrontendTakeHomePizzaToppings {
 }
 
 export enum HiringFrontendTakeHomeToppingQuantity {
+  None = "none",
   Light = "light",
   Regular = "regular",
   Extra = "extra",
 }
 
 // Represents a single topping with its quantity
-type PizzaTopping = {
+export type PizzaTopping = {
   name: HiringFrontendTakeHomePizzaToppings;
   quantity: HiringFrontendTakeHomeToppingQuantity;
 };
@@ -104,7 +105,7 @@ export type HiringFrontendTakeHomeOrderResponse =
     estimatedDeliveryTime?: number;
   };
 
-enum HiringFrontendTakeHomeSpecialtyPizzaGroup {
+export enum HiringFrontendTakeHomeSpecialtyPizzaGroup {
   MeatLovers = "meat lovers",
   VeggieLovers = "veggie lovers",
   NewRecipes = "new recipes",
