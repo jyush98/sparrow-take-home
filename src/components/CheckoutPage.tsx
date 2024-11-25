@@ -67,7 +67,7 @@ const CheckoutPage: React.FC = () => {
             return;
         }
 
-    
+
         // Prepare order items for the request
         const items: OrderItem[] = cartItems.map((item) => ({
             id: item.id,
@@ -78,21 +78,16 @@ const CheckoutPage: React.FC = () => {
                 quantity: item.quantity,
                 totalPrice: item.pricePerUnit * item.quantity,
                 toppings: [
-                    ...Object.entries(item.defaultToppings).map(
-                        ([toppingName, toppingQuantity]) =>
-                            ({
-                                name: toppingName as HiringFrontendTakeHomePizzaToppings,
-                                quantity: toppingQuantity as HiringFrontendTakeHomeToppingQuantity,
-                            }) as PizzaTopping
-                    ),
                     ...Object.entries(item.extraToppings).map(
                         ([toppingName, toppingQuantity]) =>
                             ({
                                 name: toppingName as HiringFrontendTakeHomePizzaToppings,
                                 quantity: toppingQuantity as HiringFrontendTakeHomeToppingQuantity,
                             }) as PizzaTopping
-                    ),
-                ],
+                    )],
+                toppingExclusions: (item.removedToppings ?? []).map(
+                    (toppingName) => toppingName as HiringFrontendTakeHomePizzaToppings
+                ),
             },
         }));
 
