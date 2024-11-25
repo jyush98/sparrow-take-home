@@ -12,7 +12,12 @@ const Home: React.FC = () => {
       <Button variant="contained" color="primary" onClick={() => navigate('/order')} style={{ margin: '1rem' }}>
         Customer Ordering Flow
       </Button>
-      <Button variant="contained" color="secondary" onClick={() => navigate('/dashboard')} style={{ margin: '1rem' }}>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => navigate(`/pizzas`)}
+        style={{ margin: '1rem' }}
+      >
         Employee Orders Dashboard
       </Button>
       <Button variant="contained" color="primary" onClick={() => navigate('/order-status')} style={{ margin: '1rem' }}>

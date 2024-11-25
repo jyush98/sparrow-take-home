@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import CustomerOrdering from './components/CustomerOrdering';
 import CheckoutPage from './components/CheckoutPage';
-//import EmployeeDashboard from './components/EmployeeDashboard';
+import EmployeeDashboard from './components/EmployeeDashboard';
 //import OrderStatusCheck from './components/OrderStatusCheck';
 
 const App: React.FC = () => {
@@ -13,8 +13,8 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/order" element={<CustomerOrdering />} />
         <Route path="/order/checkout" element={<CheckoutPage />} />
-        {/* <Route path="/dashboard" element={<EmployeeDashboard />} />
-        <Route path="/order-status" element={<OrderStatusCheck />} /> */}
+        <Route path="/pizzas" element={<EmployeeDashboard locationId={'j-yushuvayev'} />} />
+        {/* <Route path="/order-status" element={<OrderStatusCheck />} /> */}
       </Routes>
     </Router>
   );
