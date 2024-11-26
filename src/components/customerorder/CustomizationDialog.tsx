@@ -40,7 +40,7 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
     const [selectedSize, setSelectedSize] = useState<'small' | 'medium' | 'large'>('medium');
     const [selectedToppings, setSelectedToppings] = useState<{ [key: string]: string }>({});
     const [excludedToppings, setExcludedToppings] = useState<string[]>([]);
-    const [quantity, setQuantity] = useState<number>(1);
+    const [quantity, setQuantity] = useState<string>('1');
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -52,7 +52,7 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
                 initialToppings[topping] = 'regular';
             });
             setSelectedToppings(initialToppings);
-            setQuantity(1);
+            setQuantity('1');
         }
     }, [open, pizza, pricingData]);
 
@@ -64,7 +64,7 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
         setSelectedSize('medium');
         setSelectedToppings({});
         setExcludedToppings([]);
-        setQuantity(1);
+        setQuantity('1');
         onClose();
     };
 
@@ -72,7 +72,6 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
         setSelectedSize(size);
     };
 
-    // Handle changes in topping selection
     const handleToppingChange = (toppingName: string, value: string) => {
         setSelectedToppings((prev) => {
             const newToppings = { ...prev };
@@ -92,13 +91,18 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
     };
 
     const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value, 10);
-        if (value > 0) {
-            setQuantity(value);
+        setQuantity(e.target.value);
+    };
+
+    const handleQuantityBlur = () => {
+        const value = parseInt(quantity, 10);
+        if (isNaN(value) || value < 1) {
+            setQuantity('1');
+        } else {
+            setQuantity(value.toString());
         }
     };
 
-    // Calculate the total price
     const calculateTotalPrice = () => {
         let totalPrice = pizza.price[selectedSize];
 
@@ -110,7 +114,7 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
             }
         });
 
-        totalPrice *= quantity;
+        totalPrice *= parseInt(quantity, 10);
 
         return totalPrice.toFixed(2);
     };
@@ -126,8 +130,8 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
                 Object.entries(selectedToppings).filter(([topping, _]) => !pizza.toppings.includes(topping)).map(([topping, value]) => [topping.replace('_', ' '), value])
             ),
             removedToppings: [...excludedToppings.map(topping => topping.replace('_', ' '))],
-            quantity,
-            pricePerUnit: parseFloat(calculateTotalPrice()) / quantity,
+            quantity: parseInt(quantity, 10),
+            pricePerUnit: parseFloat(calculateTotalPrice()) / parseInt(quantity, 10),
         };
 
         dispatch(addItemToCart(cartItem));
@@ -207,6 +211,7 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
                     type="number"
                     value={quantity}
                     onChange={handleQuantityChange}
+                    onBlur={handleQuantityBlur}
                     slotProps={{ input: { inputProps: { min: 1 } } }}
                 />
                 <Button onClick={handleClose} color="secondary">

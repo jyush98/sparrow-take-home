@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -20,9 +20,34 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleQuantityChange = (id: string, quantity: number) => {
+    const [localQuantities, setLocalQuantities] = useState<{ [key: string]: string }>({});
+
+    React.useEffect(() => {
+        const initialQuantities = cartItems.reduce((acc, item) => {
+            acc[item.id] = item.quantity.toString();
+            return acc;
+        }, {} as { [key: string]: string });
+        setLocalQuantities(initialQuantities);
+    }, [cartItems]);
+
+    const handleQuantityChange = (id: string, value: string) => {
+        setLocalQuantities((prev) => ({
+            ...prev,
+            [id]: value,
+        }));
+    };
+
+    const handleQuantityBlur = (id: string) => {
+        const quantity = parseInt(localQuantities[id], 10);
         if (quantity > 0) {
             dispatch(updateQuantity({ id, quantity }));
+        } else {
+            // Reset to 1 if the entered value is invalid
+            setLocalQuantities((prev) => ({
+                ...prev,
+                [id]: '1',
+            }));
+            dispatch(updateQuantity({ id, quantity: 1 }));
         }
     };
 
@@ -70,8 +95,9 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
                             <TextField
                                 label="Quantity"
                                 type="number"
-                                value={item.quantity}
-                                onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value, 10))}
+                                value={localQuantities[item.id] || ''}
+                                onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+                                onBlur={() => handleQuantityBlur(item.id)}
                                 slotProps={{ input: { inputProps: { min: 1 } } }}
                             />
                             <Button onClick={() => handleRemoveItem(item.id)} color="secondary">
@@ -85,16 +111,13 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
                 <Button onClick={onClose} color="primary">
                     Close
                 </Button>
-                {cartItems.length > 0 && ( 
-                <>
-                    <Button onClick={handleProceedToCheckout} variant="contained" color="primary">
-                        Proceed to Checkout
-                    </Button>
-                    <h3>
-                        ${calculateTotal()}
-                    </h3>
-                </>
-                    
+                {cartItems.length > 0 && (
+                    <>
+                        <Button onClick={handleProceedToCheckout} variant="contained" color="primary">
+                            Proceed to Checkout
+                        </Button>
+                        <h3>${calculateTotal()}</h3>
+                    </>
                 )}
             </DialogActions>
         </Dialog>
