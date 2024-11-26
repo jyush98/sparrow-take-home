@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { cancelPizzaOrder, getPizzaOrderById } from '../types/api/index';
+import { cancelPizzaOrder, getPizzaOrderById } from '../../types/api/index';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import { HiringFrontendTakeHomeOrderResponse, HiringFrontendTakeHomeOrderStatus } from '../types/index';
+import { HiringFrontendTakeHomeOrderResponse, HiringFrontendTakeHomeOrderStatus } from '../../types/index';
 import { useNavigate } from 'react-router-dom';
 
 const OrderCheck: React.FC = () => {

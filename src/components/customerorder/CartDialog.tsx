@@ -5,8 +5,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store/store';
-import { removeItemFromCart, updateQuantity } from '../store/cartSlice';
+import { RootState } from '../../store/store';
+import { removeItemFromCart, updateQuantity } from '../../store/cartSlice';
 import TextField from '@mui/material/TextField';
 import { useNavigate } from 'react-router-dom';
 

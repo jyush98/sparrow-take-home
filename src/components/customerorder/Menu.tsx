@@ -1,8 +1,8 @@
 import React, { useEffect, useState, memo, useCallback } from 'react';
 import './Menu.css';
-import headerImage from '../assets/pizza.png';
+import headerImage from '../../assets/pizza.png';
 import CustomizationDialog from './CustomizationDialog';
-import { Pizza, PricingData } from '.././types';
+import { Pizza, PricingData } from '../../types';
 
 const Menu: React.FC = memo(() => {
     const [pizzas, setPizzas] = useState<Pizza[]>([]);

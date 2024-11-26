@@ -7,11 +7,11 @@ import Button from '@mui/material/Button';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
-import { Pizza } from '.././types';
-import headerImage from '../assets/pizza.png';
+import { Pizza } from '../.././types';
+import headerImage from '../../assets/pizza.png';
 import TextField from '@mui/material/TextField';
 import { useDispatch } from 'react-redux';
-import { addItemToCart } from '../store/cartSlice';
+import { addItemToCart } from '../../store/cartSlice';
 import Checkbox from '@mui/material/Checkbox';
 
 interface ToppingPrices {

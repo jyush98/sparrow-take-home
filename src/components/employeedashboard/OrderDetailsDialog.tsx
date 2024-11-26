@@ -1,5 +1,5 @@
 import React from 'react';
-import { HiringFrontendTakeHomeOrderResponse } from '../types/index';
+import { HiringFrontendTakeHomeOrderResponse } from '../../types/index';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';

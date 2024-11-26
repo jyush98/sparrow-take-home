@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
-import CustomerOrdering from './components/CustomerOrdering';
-import CheckoutPage from './components/CheckoutPage';
-import EmployeeDashboard from './components/EmployeeDashboard';
-import OrderCheck from './components/OrderCheck';
+import CustomerOrdering from './components/customerorder/CustomerOrdering';
+import CheckoutPage from './components/customerorder/CheckoutPage';
+import EmployeeDashboard from './components/employeedashboard/EmployeeDashboard';
+import OrderCheck from './components/orderstatus/OrderCheck';
 
 const App: React.FC = () => {
   return (

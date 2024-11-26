@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getAllOrders, updatePizzaOrderStatus } from '../types/api/index';
-import { HiringFrontendTakeHomeOrderResponse, HiringFrontendTakeHomeOrderStatus } from '../types/index';
+import { getAllOrders, updatePizzaOrderStatus } from '../../types/api/index';
+import { HiringFrontendTakeHomeOrderResponse, HiringFrontendTakeHomeOrderStatus } from '../../types/index';
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';

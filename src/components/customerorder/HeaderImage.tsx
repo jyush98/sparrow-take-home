@@ -1,5 +1,5 @@
 import React from 'react';
-import headerImage from '../assets/pizza.png'; 
+import headerImage from '../../assets/pizza.png'; 
 import './HeaderImage.css'; 
 
 const HeaderImage: React.FC = () => {

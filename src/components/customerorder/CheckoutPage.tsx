@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store/store';
-import { clearCart } from '../store/cartSlice';
+import { RootState } from '../../store/store';
+import { clearCart } from '../../store/cartSlice';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -23,8 +23,8 @@ import {
     HiringFrontendTakeHomeToppingQuantity,
     HiringFrontendTakeHomePizzaType,
     HiringFrontendTakeHomePizzaToppings,
-} from '../types/index';
-import { createPizzaOrder } from '../types/api/index';
+} from '../../types/index';
+import { createPizzaOrder } from '../../types/api/index';
 
 
 interface DeliveryAddress {
