@@ -25,6 +25,7 @@ const EmployeeOrdersDashboard: React.FC<EmployeeOrdersDashboardProps> = ({ locat
     const [error, setError] = useState<string | null>(null);
     const [selectedOrder, setSelectedOrder] = useState<HiringFrontendTakeHomeOrderResponse | null>(null);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+    const [sortOrder, setSortOrder] = useState<'latest' | 'oldest'>('latest');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -66,6 +67,14 @@ const EmployeeOrdersDashboard: React.FC<EmployeeOrdersDashboardProps> = ({ locat
         setSelectedOrder(null);
     };
 
+    const sortedOrders = [...orders].sort((a, b) => {
+        if (sortOrder === 'latest') {
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        } else {
+            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        }
+    });
+
     if (loading) {
         return <p>Loading orders...</p>;
     }
@@ -80,6 +89,15 @@ const EmployeeOrdersDashboard: React.FC<EmployeeOrdersDashboardProps> = ({ locat
                 <h2 style={{ margin: 0 }}>Employee Dashboard</h2>
                 <button onClick={() => navigate('/')} style={{ marginBottom: '1rem' }} className="header-button">Home</button>
             </Box>
+            <Box display="flex" justifyContent="flex-end" marginBottom="1rem">
+                <Select
+                    value={sortOrder}
+                    onChange={(e) => setSortOrder(e.target.value as 'latest' | 'oldest')}
+                >
+                    <MenuItem value="latest">Latest</MenuItem>
+                    <MenuItem value="oldest">Oldest</MenuItem>
+                </Select>
+            </Box>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -92,7 +110,7 @@ const EmployeeOrdersDashboard: React.FC<EmployeeOrdersDashboardProps> = ({ locat
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {orders.map((order) => (
+                        {sortedOrders.map((order) => (
                             <TableRow key={order.id}>
                                 <TableCell>{order.id}</TableCell>
                                 <TableCell>
