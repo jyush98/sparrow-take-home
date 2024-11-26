@@ -4,7 +4,7 @@ import Home from './components/Home';
 import CustomerOrdering from './components/CustomerOrdering';
 import CheckoutPage from './components/CheckoutPage';
 import EmployeeDashboard from './components/EmployeeDashboard';
-//import OrderStatusCheck from './components/OrderStatusCheck';
+import OrderCheck from './components/OrderCheck';
 
 const App: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ const App: React.FC = () => {
         <Route path="/order" element={<CustomerOrdering />} />
         <Route path="/order/checkout" element={<CheckoutPage />} />
         <Route path="/pizzas" element={<EmployeeDashboard locationId={'j-yushuvayev'} />} />
-        {/* <Route path="/order-status" element={<OrderStatusCheck />} /> */}
+        <Route path="/order-status" element={<OrderCheck />} />
       </Routes>
     </Router>
   );
