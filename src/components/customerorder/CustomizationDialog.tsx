@@ -100,39 +100,39 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
 
     // Calculate the total price
     const calculateTotalPrice = () => {
-    let totalPrice = pizza.price[selectedSize];
+        let totalPrice = pizza.price[selectedSize];
 
-    // Add price of toppings (light, regular, extra)
-    Object.entries(selectedToppings).forEach(([toppingName, quantity]) => {
-        if (quantity !== 'none' && pricingData?.toppingPrices[toppingName] && !pizza.toppings.includes(toppingName)) {
-            const toppingLevel = quantity as 'light' | 'regular' | 'extra';
-            totalPrice += pricingData.toppingPrices[toppingName][toppingLevel];
-        }
-    });
+        // Add price of toppings (light, regular, extra)
+        Object.entries(selectedToppings).forEach(([toppingName, quantity]) => {
+            if (quantity !== 'none' && pricingData?.toppingPrices[toppingName] && !pizza.toppings.includes(toppingName)) {
+                const toppingLevel = quantity as 'light' | 'regular' | 'extra';
+                totalPrice += pricingData.toppingPrices[toppingName][toppingLevel];
+            }
+        });
 
-    totalPrice *= quantity;
+        totalPrice *= quantity;
 
-    return totalPrice.toFixed(2);
-};
-
-const handleAddToCart = () => {
-    const cartItem = {
-        id: `${pizza.id}-${Date.now()}`, // Generating a unique ID using timestamp 
-        name: pizza.name,
-        size: selectedSize,
-        type: pizza.type,
-        defaultToppings: pizza.toppings.filter((element) => !excludedToppings.includes(element)),
-        extraToppings: Object.fromEntries(
-            Object.entries(selectedToppings).filter(([topping, _]) => !pizza.toppings.includes(topping))
-        ),
-        removedToppings: [...excludedToppings],
-        quantity,
-        pricePerUnit: parseFloat(calculateTotalPrice()) / quantity,
+        return totalPrice.toFixed(2);
     };
 
-    dispatch(addItemToCart(cartItem));
-    handleClose();
-};
+    const handleAddToCart = () => {
+        const cartItem = {
+            id: `${pizza.id}-${Date.now()}`, // Generating a unique ID using timestamp 
+            name: pizza.name,
+            size: selectedSize,
+            type: pizza.type,
+            defaultToppings: pizza.toppings.filter((element) => !excludedToppings.includes(element)).map(topping => topping.replace('_', ' ')),
+            extraToppings: Object.fromEntries(
+                Object.entries(selectedToppings).filter(([topping, _]) => !pizza.toppings.includes(topping)).map(([topping, value]) => [topping.replace('_', ' '), value])
+            ),
+            removedToppings: [...excludedToppings.map(topping => topping.replace('_', ' '))],
+            quantity,
+            pricePerUnit: parseFloat(calculateTotalPrice()) / quantity,
+        };
+
+        dispatch(addItemToCart(cartItem));
+        handleClose();
+    };
 
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
@@ -184,7 +184,7 @@ const handleAddToCart = () => {
                         )
                         .map(([toppingName, prices]) => (
                             <div key={toppingName}>
-                                <h5>{toppingName.replace('_', ' ')}</h5>
+                                <h5>{toppingName.split('_').join(' ')}</h5>
                                 <RadioGroup value={selectedToppings[toppingName] || 'none'} onChange={(e) => handleToppingChange(toppingName, e.target.value)}>
                                     <FormControlLabel value="none" control={<Radio />} label={'None'} />
                                     <FormControlLabel value="light" control={<Radio />} label={`Light ($${prices.light})`} />
