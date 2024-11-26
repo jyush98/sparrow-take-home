@@ -116,6 +116,10 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
 
         totalPrice *= parseInt(quantity, 10);
 
+        if (Number.isNaN(totalPrice)) {
+            return '0.00';
+        }
+
         return totalPrice.toFixed(2);
     };
 
