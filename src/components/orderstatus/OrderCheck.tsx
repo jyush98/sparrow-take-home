@@ -3,6 +3,7 @@ import { cancelPizzaOrder, getPizzaOrderById } from '../../types/api/index';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import { HiringFrontendTakeHomeOrderResponse, HiringFrontendTakeHomeOrderStatus } from '../../types/index';
 import { useNavigate } from 'react-router-dom';
 
@@ -46,15 +47,10 @@ const OrderCheck: React.FC = () => {
     return (
         <div style={{ maxWidth: '600px', margin: '2rem auto', padding: '1rem' }}>
             <Paper style={{ padding: '1rem' }}>
-                <h2>Order Status Check</h2>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => navigate('/')}
-                    style={{ marginBottom: '1rem' }}
-                >
-                    Home
-                </Button>
+                <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="1rem">
+                    <h2 style={{ margin: 0 }}>Order Status</h2>
+                    <button onClick={() => navigate('/')} style={{ marginBottom: '1rem' }} className="header-button">Home</button>
+                </Box>
                 <TextField
                     label="Enter Order ID"
                     fullWidth

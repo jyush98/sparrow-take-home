@@ -8,3 +8,18 @@
   * {
     font-family: 'TT Norms Pro', sans-serif;
   }
+
+  .header-button {
+    background-color: #f13312;
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.header-button:hover {
+    background-color: #c12b10;
+}

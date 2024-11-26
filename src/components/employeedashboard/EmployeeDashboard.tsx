@@ -12,6 +12,8 @@ import Paper from '@mui/material/Paper';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import OrderDetailsDialog from './OrderDetailsDialog';
+import { useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
 
 interface EmployeeOrdersDashboardProps {
     locationId: string;
@@ -23,6 +25,7 @@ const EmployeeOrdersDashboard: React.FC<EmployeeOrdersDashboardProps> = ({ locat
     const [error, setError] = useState<string | null>(null);
     const [selectedOrder, setSelectedOrder] = useState<HiringFrontendTakeHomeOrderResponse | null>(null);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -73,7 +76,10 @@ const EmployeeOrdersDashboard: React.FC<EmployeeOrdersDashboardProps> = ({ locat
 
     return (
         <div style={{ maxWidth: '800px', margin: '2rem auto' }}>
-            <h2>Employee Orders Dashboard</h2>
+            <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="1rem">
+                <h2 style={{ margin: 0 }}>Employee Dashboard</h2>
+                <button onClick={() => navigate('/')} style={{ marginBottom: '1rem' }} className="header-button">Home</button>
+            </Box>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
