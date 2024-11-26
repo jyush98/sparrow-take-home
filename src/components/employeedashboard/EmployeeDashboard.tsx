@@ -25,8 +25,10 @@ const EmployeeOrdersDashboard: React.FC<EmployeeOrdersDashboardProps> = ({ locat
     const [error, setError] = useState<string | null>(null);
     const [selectedOrder, setSelectedOrder] = useState<HiringFrontendTakeHomeOrderResponse | null>(null);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-    const [sortOrder, setSortOrder] = useState<'latest' | 'oldest'>('latest');
+    const [sortOrder, setSortOrder] = useState<'latest' | 'oldest' | 'status'>('latest');
     const navigate = useNavigate();
+
+    const statusOrder = ['pending', 'preparing', 'ready', 'delivered', 'cancelled'];
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -70,8 +72,12 @@ const EmployeeOrdersDashboard: React.FC<EmployeeOrdersDashboardProps> = ({ locat
     const sortedOrders = [...orders].sort((a, b) => {
         if (sortOrder === 'latest') {
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        } else {
+        } else if (sortOrder === 'oldest') {
             return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        } else if (sortOrder === 'status') {
+            return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+        } else {
+            return 0;
         }
     });
 
@@ -92,10 +98,11 @@ const EmployeeOrdersDashboard: React.FC<EmployeeOrdersDashboardProps> = ({ locat
             <Box display="flex" justifyContent="flex-end" marginBottom="1rem">
                 <Select
                     value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value as 'latest' | 'oldest')}
+                    onChange={(e) => setSortOrder(e.target.value as 'latest' | 'oldest' | 'status')}
                 >
                     <MenuItem value="latest">Latest</MenuItem>
                     <MenuItem value="oldest">Oldest</MenuItem>
+                    <MenuItem value="status">Status</MenuItem>
                 </Select>
             </Box>
             <TableContainer component={Paper}>
