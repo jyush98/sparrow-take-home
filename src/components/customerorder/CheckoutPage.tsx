@@ -80,10 +80,10 @@ const CheckoutPage: React.FC = () => {
                 toppings: [
                     ...Object.entries(item.extraToppings).map(
                         ([toppingName, toppingQuantity]) =>
-                        ({
-                            name: toppingName as HiringFrontendTakeHomePizzaToppings,
-                            quantity: toppingQuantity as HiringFrontendTakeHomeToppingQuantity,
-                        }) as PizzaTopping
+                            ({
+                                name: toppingName as HiringFrontendTakeHomePizzaToppings,
+                                quantity: toppingQuantity as HiringFrontendTakeHomeToppingQuantity,
+                            }) as PizzaTopping
                     )],
                 toppingExclusions: (item.removedToppings ?? []).map(
                     (toppingName) => toppingName as HiringFrontendTakeHomePizzaToppings

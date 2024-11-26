@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 const Header: React.FC = () => {
     const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const handleCartOpen = () => setIsCartOpen(true);
-  const handleCartClose = () => setIsCartOpen(false);
-  const navigate = useNavigate();
+    const handleCartOpen = () => setIsCartOpen(true);
+    const handleCartClose = () => setIsCartOpen(false);
+    const navigate = useNavigate();
 
     return (
         <header style={headerStyles}>
