@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllOrders } from '../types/api/index';
+import { getAllOrders, updatePizzaOrderStatus } from '../types/api/index';
 import { HiringFrontendTakeHomeOrderResponse, HiringFrontendTakeHomeOrderStatus } from '../types/index';
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
@@ -41,6 +41,8 @@ const EmployeeOrdersDashboard: React.FC<EmployeeOrdersDashboardProps> = ({ locat
 
     const handleStatusChange = async (orderId: string, newStatus: HiringFrontendTakeHomeOrderStatus) => {
         try {
+            await updatePizzaOrderStatus(orderId, newStatus);
+
             setOrders((prevOrders) =>
                 prevOrders.map((order) =>
                     order.id === orderId ? { ...order, status: newStatus } : order

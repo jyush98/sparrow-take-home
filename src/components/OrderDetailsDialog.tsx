@@ -23,6 +23,8 @@ const OrderDetailsDialog: React.FC<OrderDetailsDialogProps> = ({ order, open, on
                 <h3>Order Summary:</h3>
                 {order.items.map((item) => (
                     <div key={item.id} style={{ marginBottom: '1rem' }}>
+                        {/* Would have liked to include the pizza names or IDs here but 
+                        the OrderResponse and the Pizza do not contain that info */}
                         <p>Size: {item.pizza.size}</p>
                         <p>Quantity: {item.pizza.quantity}</p>
                         <p>Toppings: {(item.pizza.toppings ?? []).map((topping) => `${topping.name} (${topping.quantity})`).join(', ') || 'None'}</p>
