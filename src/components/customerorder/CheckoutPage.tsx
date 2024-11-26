@@ -15,11 +15,9 @@ import Radio from '@mui/material/Radio';
 import { useNavigate } from 'react-router-dom';
 import {
     HiringFrontendTakeHomeOrderRequest,
-    OrderItem,
     HiringFrontendTakeHomePaymentMethod,
     HiringFrontendTakeHomeOrderType,
     HiringFrontendTakeHomePizzaSize,
-    PizzaTopping,
     HiringFrontendTakeHomeToppingQuantity,
     HiringFrontendTakeHomePizzaType,
     HiringFrontendTakeHomePizzaToppings,
@@ -69,9 +67,9 @@ const CheckoutPage: React.FC = () => {
 
 
         // Prepare order items for the request
-        const items: OrderItem[] = cartItems.map((item) => ({
+        const items = cartItems.map((item) => ({
             id: item.id,
-            pizza: {
+            item: {
                 type: item.type as HiringFrontendTakeHomePizzaType,
                 size: item.size as HiringFrontendTakeHomePizzaSize,
                 name: item.name,
@@ -80,10 +78,10 @@ const CheckoutPage: React.FC = () => {
                 toppings: [
                     ...Object.entries(item.extraToppings).map(
                         ([toppingName, toppingQuantity]) =>
-                            ({
-                                name: toppingName as HiringFrontendTakeHomePizzaToppings,
-                                quantity: toppingQuantity as HiringFrontendTakeHomeToppingQuantity,
-                            }) as PizzaTopping
+                        ({
+                            name: toppingName as HiringFrontendTakeHomePizzaToppings,
+                            quantity: toppingQuantity as HiringFrontendTakeHomeToppingQuantity,
+                        })
                     )],
                 toppingExclusions: (item.removedToppings ?? []).map(
                     (toppingName) => toppingName as HiringFrontendTakeHomePizzaToppings

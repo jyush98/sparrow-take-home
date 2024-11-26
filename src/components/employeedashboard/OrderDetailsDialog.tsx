@@ -25,11 +25,11 @@ const OrderDetailsDialog: React.FC<OrderDetailsDialogProps> = ({ order, open, on
                     <div key={item.id} style={{ marginBottom: '1rem' }}>
                         {/* Would have liked to include the pizza names or IDs here but 
                         the OrderResponse and the Pizza do not contain that info */}
-                        <p>Size: {item.pizza.size}</p>
-                        <p>Quantity: {item.pizza.quantity}</p>
-                        <p>Toppings: {(item.pizza.toppings ?? []).map((topping) => `${topping.name} (${topping.quantity})`).join(', ') || 'None'}</p>
-                        <p>Topping Exclusions: {item.pizza.toppingExclusions?.join(', ') || 'None'}</p>
-                        <p>Price per Unit: ${item.pizza.totalPrice.toFixed(2)}</p>
+                        <p>Size: {item.item.size}</p>
+                        <p>Quantity: {item.item.quantity}</p>
+                        <p>Toppings: {(item.item.toppings ?? []).map((topping) => `${topping.name} (${topping.quantity})`).join(', ') || 'None'}</p>
+                        <p>Topping Exclusions: {item.item.toppingExclusions?.join(', ') || 'None'}</p>
+                        <p>Price per Unit: ${item.item.totalPrice.toFixed(2)}</p>
                         <Divider style={{ margin: '1rem 0' }} />
                     </div>
                 ))}

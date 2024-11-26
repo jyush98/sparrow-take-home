@@ -23,14 +23,13 @@ export enum HiringFrontendTakeHomePizzaToppings {
 }
 
 export enum HiringFrontendTakeHomeToppingQuantity {
-  None = "none",
   Light = "light",
   Regular = "regular",
   Extra = "extra",
 }
 
 // Represents a single topping with its quantity
-export type PizzaTopping = {
+type PizzaTopping = {
   name: HiringFrontendTakeHomePizzaToppings;
   quantity: HiringFrontendTakeHomeToppingQuantity;
 };
@@ -40,16 +39,16 @@ type Pizza = {
   size: HiringFrontendTakeHomePizzaSize;
   // For specialty pizzas, we only add extra toppings in the toppings array
   // For custom pizzas, we charge for all toppings
-  toppings?: PizzaTopping[];
+  toppings: PizzaTopping[];
   // For specialty pizzas, we can exclude toppings that are already included in the pizza
   toppingExclusions?: HiringFrontendTakeHomePizzaToppings[];
   quantity: number;
   totalPrice: number;
 };
 
-export type OrderItem = {
+type OrderItem = {
   id: string;
-  pizza: Pizza;
+  item: Pizza;
 };
 
 export enum HiringFrontendTakeHomeOrderStatus {
@@ -105,7 +104,7 @@ export type HiringFrontendTakeHomeOrderResponse =
     estimatedDeliveryTime?: number;
   };
 
-export enum HiringFrontendTakeHomeSpecialtyPizzaGroup {
+enum HiringFrontendTakeHomeSpecialtyPizzaGroup {
   MeatLovers = "meat lovers",
   VeggieLovers = "veggie lovers",
   NewRecipes = "new recipes",
