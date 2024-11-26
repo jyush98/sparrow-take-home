@@ -21,9 +21,9 @@ import {
     HiringFrontendTakeHomeToppingQuantity,
     HiringFrontendTakeHomePizzaType,
     HiringFrontendTakeHomePizzaToppings,
+    HiringFrontendTakeHomeOrderResponse,
 } from '../../types/index';
 import { createPizzaOrder } from '../../types/api/index';
-
 
 interface DeliveryAddress {
     street: string;
@@ -54,7 +54,7 @@ const CheckoutPage: React.FC = () => {
     const dispatch = useDispatch();
     const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card'>('card');
     const [obtainMethod, setObtainMethod] = useState<'pickup' | 'delivery'>('pickup');
-
+    const [orderId, setOrderId] = useState<string | null>(null);
 
     const handlePlaceOrder = async () => {
         // Validate user input before proceeding
@@ -69,7 +69,6 @@ const CheckoutPage: React.FC = () => {
             alert('Please fill in all fields');
             return;
         }
-
 
         // Prepare order items for the request
         const items = cartItems.map((item) => ({
@@ -119,22 +118,34 @@ const CheckoutPage: React.FC = () => {
             type: obtainMethod === 'pickup' ? HiringFrontendTakeHomeOrderType.Pickup : HiringFrontendTakeHomeOrderType.Delivery,
         };
 
-
         try {
             // Call the createPizzaOrder function with the constructed order
-            await createPizzaOrder(order);
-            //alert(`Order placed successfully! Order ID: ${result.order.id}`);
+            const result = await createPizzaOrder(order);
+            const data = result.order as HiringFrontendTakeHomeOrderResponse;
+            setOrderId(data.id);
             dispatch(clearCart());
-            navigate('/');
         } catch (error) {
             alert("Failed to place order. Please try again.");
         }
     };
 
-
     const calculateTotal = () => {
         return cartItems.reduce((total, item) => total + item.pricePerUnit * item.quantity, 0).toFixed(2);
     };
+
+    if (orderId) {
+        return (
+            <div style={{ maxWidth: '600px', margin: '2rem auto', padding: '1rem' }}>
+                <Paper style={{ padding: '1rem' }}>
+                    <h2>Order Placed Successfully!</h2>
+                    <p>Your order ID is: {orderId}</p>
+                    <Button onClick={() => navigate('/')} variant="contained" color="primary">
+                        Back to Home
+                    </Button>
+                </Paper>
+            </div>
+        );
+    }
 
     if (cartItems.length === 0) {
         return <p>Your cart is empty. Please add items to proceed to checkout.</p>;
@@ -221,7 +232,6 @@ const CheckoutPage: React.FC = () => {
                             />
                         </>
                     )}
-
 
                     <h3>Billing Information:</h3>
                     <RadioGroup
