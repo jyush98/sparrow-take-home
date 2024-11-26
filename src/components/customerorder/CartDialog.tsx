@@ -52,10 +52,7 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onClose }) => {
                             <p>Size: {item.size}</p>
                             <p>
                                 Toppings:{' '}
-                                {Object.keys(item.defaultToppings)
-                                    .filter((topping) => !item.removedToppings.includes(topping))
-                                    .map((topping) => `${topping} (${item.defaultToppings[topping]})`)
-                                    .join(', ') || 'None'}
+                                {item.defaultToppings.join(', ') || 'None'}
                             </p>
                             <p>
                                 Removed Toppings:{' '}

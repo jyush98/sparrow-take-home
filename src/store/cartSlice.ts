@@ -5,7 +5,7 @@ interface CartItem {
   name: string;
   size: string;
   type: string;
-  defaultToppings: { [key: string]: string }; // Default toppings
+  defaultToppings: string[]; // Default toppings
   extraToppings: { [key: string]: string };   // Extra toppings
   removedToppings: string[];                  // Removed toppings
   quantity: number;
@@ -27,7 +27,7 @@ const cartSlice = createSlice({
     addItemToCart: (state, action: PayloadAction<CartItem>) => {
       const newItem = {
         ...action.payload,
-        defaultToppings: action.payload.defaultToppings || {}, // Initialize as empty object if not provided
+        defaultToppings: action.payload.defaultToppings || [], // Initialize as empty object if not provided
         extraToppings: action.payload.extraToppings || {},     // Initialize as empty object if not provided
         removedToppings: action.payload.removedToppings || [], // Initialize as empty array if not provided
       };

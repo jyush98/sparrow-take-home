@@ -74,10 +74,15 @@ const CustomizationDialog: React.FC<CustomizationDialogProps> = ({ open, onClose
 
     // Handle changes in topping selection
     const handleToppingChange = (toppingName: string, value: string) => {
-        setSelectedToppings((prev) => ({
-            ...prev,
-            [toppingName]: value,
-        }));
+        setSelectedToppings((prev) => {
+            const newToppings = { ...prev };
+            if (value === 'none') {
+                delete newToppings[toppingName];
+            } else {
+                newToppings[toppingName] = value;
+            }
+            return newToppings;
+        });
     };
 
     const handleToppingExcludeChange = (toppingName: string, isExcluded: boolean) => {
@@ -116,9 +121,7 @@ const handleAddToCart = () => {
         name: pizza.name,
         size: selectedSize,
         type: pizza.type,
-        defaultToppings: Object.fromEntries(
-            Object.entries(selectedToppings).filter(([topping, _]) => pizza.toppings.includes(topping))
-        ),
+        defaultToppings: pizza.toppings.filter((element) => !excludedToppings.includes(element)),
         extraToppings: Object.fromEntries(
             Object.entries(selectedToppings).filter(([topping, _]) => !pizza.toppings.includes(topping))
         ),
