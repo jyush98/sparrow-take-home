@@ -32,6 +32,11 @@ interface DeliveryAddress {
     zipCode: string;
 }
 
+interface PizzaTopping {
+    name: HiringFrontendTakeHomePizzaToppings;
+    quantity: HiringFrontendTakeHomeToppingQuantity;
+}
+
 const CheckoutPage: React.FC = () => {
     const cartItems = useSelector((state: RootState) => state.cart.items);
     const [firstName, setFirstName] = useState<string>('');
@@ -69,37 +74,41 @@ const CheckoutPage: React.FC = () => {
         // Prepare order items for the request
         const items = cartItems.map((item) => ({
             id: item.id,
-            item: {
+            pizza: {
                 type: item.type as HiringFrontendTakeHomePizzaType,
                 size: item.size as HiringFrontendTakeHomePizzaSize,
-                name: item.name,
-                quantity: item.quantity,
-                totalPrice: item.pricePerUnit * item.quantity,
                 toppings: [
                     ...Object.entries(item.extraToppings).map(
                         ([toppingName, toppingQuantity]) =>
                         ({
                             name: toppingName as HiringFrontendTakeHomePizzaToppings,
                             quantity: toppingQuantity as HiringFrontendTakeHomeToppingQuantity,
-                        })
+                        }) as PizzaTopping
                     )],
                 toppingExclusions: (item.removedToppings ?? []).map(
                     (toppingName) => toppingName as HiringFrontendTakeHomePizzaToppings
                 ),
+                quantity: item.quantity,
+                totalPrice: item.pricePerUnit * item.quantity,
             },
         }));
 
         // Create the order object according to HiringFrontendTakeHomeOrderRequest type
         const order: HiringFrontendTakeHomeOrderRequest = {
             locationId: "j-yushuvayev",
-            items,
+            items: items,
             customer: {
                 firstName,
                 lastName,
                 email,
                 ...(obtainMethod === 'delivery' && {
-                    deliveryAddress: address,
-                }),
+                    deliveryAddress: {
+                        street: address.street,
+                        city: address.city,
+                        state: address.state,
+                        zipCode: address.zipCode,
+                    },
+                })
             },
             totalAmount: parseFloat(calculateTotal()),
             paymentMethod:
@@ -109,6 +118,7 @@ const CheckoutPage: React.FC = () => {
             creditCardNumber: paymentMethod === 'card' ? cardNumber : undefined,
             type: obtainMethod === 'pickup' ? HiringFrontendTakeHomeOrderType.Pickup : HiringFrontendTakeHomeOrderType.Delivery,
         };
+
 
         try {
             // Call the createPizzaOrder function with the constructed order
